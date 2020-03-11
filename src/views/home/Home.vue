@@ -31,6 +31,8 @@
   import ToTop from './../../components/scroolToTop/top'
   import {mapMutations} from 'vuex'
   import PubSub from 'pubsub-js'
+  import { Toast } from 'vant';
+
   export default {
     data(){
       return{
@@ -65,9 +67,15 @@
           this.ADD_GOODS({
             goodsId:goods.id,
             goodsName:goods.name,
-            goodsImage:goods.small_image,
-            goodsPrice:goods.price,
+            smallImage:goods.small_image,
+            salePrice:goods.price,
           })
+          //发送提示给用户
+          Toast({
+            message:"添加购物车成功",
+            type:"success",
+            duration:1000
+            });
         }
       })
     },

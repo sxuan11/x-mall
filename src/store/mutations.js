@@ -15,6 +15,7 @@ export default {
         "name":goodsName,
         "smallimage":smallImage,
         "salePrice":salePrice,
+        "checked":true,
       }
     //生成新的对象
     state.shopCart = {...shopCart};

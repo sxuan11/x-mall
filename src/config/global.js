@@ -21,9 +21,6 @@ export const ShowBack = (callback) =>{
     
   },{passive:true})
 
-
-  
-
   //判断是否达到顶点
 
   const showBackFun = () =>{
@@ -35,3 +32,25 @@ export const ShowBack = (callback) =>{
     }
   }
 }
+/**
+ * 本地化存储
+ */
+export const setStore = (name,content)=>{
+  if (!name) return;
+  if(typeof content !== 'string'){
+    content = JSON.stringify(content)
+  }
+  window.localStorage.setItem()
+}
+
+
+
+ /**
+ * 本地化获取
+ */
+ 
+ 
+ 
+ /**
+ * 本地化删除
+ */
