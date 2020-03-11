@@ -4,7 +4,10 @@ import { Checkbox, CheckboxGroup } from 'vant';
 import { ActionSheet } from 'vant';
 import { Field } from 'vant';
 import { Cell, CellGroup } from 'vant';
+import { Dialog } from 'vant';
 
+// 全局注册
+Vue.use(Dialog);
 Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(Field);

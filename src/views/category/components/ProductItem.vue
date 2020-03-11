@@ -1,16 +1,16 @@
 <template>
     <div class="productWrapper">
-        <div v-for="(product, index) in products" class="infoWrapper" :key="index">
+        <div v-for="(item, index) in products" class="infoWrapper" :key="index">
             <div class="imageWrapper">
                 <div class="LazyLoad is-visible">
-                    <img class="image" :src="product.small_image" alt=""></div>
+                    <img class="image" :src="item.small_image" alt=""></div>
             </div>
             <div class="nameWrapper">
                 <div class="name">
-                    <span class="nameTag nameText">{{product.product_name}}</span>
+                    <span class="nameTag nameText">{{item.product_name}}</span>
                 </div>
                 <div class="spec">
-                    {{product.spec}}
+                    {{item.spec}}
                 </div>
                 <div class="tagsWrapper">
                     <div class="H1B9Rvu"></div>
@@ -18,9 +18,9 @@
             </div>
             <div class="priceWrapper">
                 <div class="price">
-                    {{product.price | moneyFormat}}
+                    {{item.price | moneyFormat}}
                 </div>
-                <div class="iconCartWrapper" @click="addToCart(product)">
+                <div class="iconCartWrapper" @click="addToCart(item)">
                     <van-icon name="cart"  color="#38f" size='0.7rem'/>
                         <defs>
                             <radialGradient cx="27.0288363%" cy="10.3693483%" fx="27.0288363%"
@@ -64,6 +64,9 @@
         //   ...mapState(["userInfo"])
         },
         methods: {
+            addToCart(item){
+                PubSub.publish("cateAddToCart",item)
+            }
             // ...mapMutations(["ADD_GOODS"]),
             // async addToCart(goods){
             //     if(this.userInfo.token){ // 已经登录
@@ -71,7 +74,7 @@
             //         console.log(result);
             //         if(result.success_code === 200){
             //             this.ADD_GOODS({
-            //                 goodsId: goods.id,
+            //                 itemId: goods.id,
             //                 goodsName: goods.name,
             //                 smallImage: goods.small_image,
             //                 goodsPrice: goods.price

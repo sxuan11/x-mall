@@ -65,7 +65,7 @@
       PubSub.subscribe('homeAddToCart',(msg,goods)=>{
         if (msg === "homeAddToCart") {
           this.ADD_GOODS({
-            goodsId:goods.id,
+            itemId:goods.id,
             goodsName:goods.name,
             smallImage:goods.small_image,
             salePrice:goods.price,

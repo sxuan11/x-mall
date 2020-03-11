@@ -5,7 +5,7 @@
     >
       <van-tabbar-item icon="home-o" to='home'>首页</van-tabbar-item>
       <van-tabbar-item icon="apps-o" to='category'>分类</van-tabbar-item>
-      <van-tabbar-item icon="cart-o" to='cart'>购物车</van-tabbar-item>
+      <van-tabbar-item icon="cart-o" to='cart' :info="goodsNum >0 ? goodsNum :''">购物车</van-tabbar-item>
       <van-tabbar-item icon="contact" to="profile" info="2">我的</van-tabbar-item>
     </van-tabbar>
   </div>
@@ -32,9 +32,18 @@ import {mapState , mapMutations} from 'vuex'
     },
     computed:{
       ...mapState(["shopCart"]),
+      
       goodsNum(){
+        // console.log(123)
         if(this.shopCart){
-          
+          //总购物车数量
+          let num  = 0;
+          // console.log(Object.values(this.shopCart))
+          Object.values(this.shopCart).forEach((item,index)=>{
+            num += item.num;
+            // console.log(num)
+          })
+          return num;
         }else{
           return 0;
         }

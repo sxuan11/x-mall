@@ -21,7 +21,7 @@
           <div class="item-price">{{item.origin_price|moneyFormat}}</div>
           <div class="butt">
             <div class="item-sale-price">{{item.price|moneyFormat}}</div>
-            <van-icon name="cart"  color="#38f" size='0.7rem' style="margin-top: 0.1rem; right:0.3rem;    position: absolute;"/>
+            <van-icon @click="addToCart(item)" name="cart"  color="#38f" size='0.7rem' style="margin-top: 0.1rem; right:0.3rem;    position: absolute;"/>
           </div>
           
         </div>
@@ -42,6 +42,11 @@
     },
     components:{
       
+    },
+    methods:{
+      addToCart(item){
+        PubSub.publish("homeAddToCart",item)
+      }
     }
   }
 </script>

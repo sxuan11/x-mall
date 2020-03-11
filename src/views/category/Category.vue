@@ -33,17 +33,20 @@
 </template>
 
 <script>
-    // 1. 引入组件
+    // 引入组件
     import Header from './components/Header'
     import ContentView from './components/ContentView'
-    // 2. 引入滚动组件
+    // 引入滚动组件
     import BScroll from 'better-scroll'
-    // 3. 引入接口
+    // 引入接口
     import {getCategory, getCategoriesDetail} from './../../server/api/index'
 
-    // 4. 引入通知插件
+    // 引入通知插件
     import PubSub from 'pubsub-js';
     import { Toast } from 'vant';
+
+		// 引入vuex
+		import {mapState,mapMutations} from 'vuex'
 
     export default {
         name: "Category",
@@ -63,13 +66,31 @@
             this.initData();
         },
         mounted(){
-
+					PubSub.subscribe("cateAddToCart",(msg,goods)=>{
+						if (msg == "cateAddToCart") {
+							this.ADD_GOODS({
+								itemId:goods.id,
+								goodsName:goods.name,
+								smallImage:goods.small_image,
+								salePrice:goods.price,
+							})
+							//发送提示给用户
+							Toast({
+								message:"添加购物车成功",
+								type:"success",
+								duration:1000
+								});
+						} else {
+							
+						}
+					})
         },
         components: {
             Header,
             ContentView
         },
         methods: {
+					...mapMutations(['ADD_GOODS']),
             // 1. 初始化操作(数据和界面)
             async initData() {
                 // 1. 获取左边的数据

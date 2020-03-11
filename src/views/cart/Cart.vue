@@ -14,27 +14,29 @@
       </div>
     </div>
     <div class="item">
-      <div class="selected">
-        <van-checkbox v-model="checked"></van-checkbox>
-      </div>
-      <div class="item-1">
-        <div class="item-1-left">
-          <img src="./images/detail1.jpg" alt="" class="item-1-img">
+      <div v-for="(item,index) in shopCart" :key="index" class="item-d">
+        <div class="selected">
+          <van-checkbox v-model="item.checked"></van-checkbox>
         </div>
-        <div class="item-1-right">
-          <div class="itemdetail">詳情</div>
-          <div class="num-edit">
-            <div class="price">$1</div>
-            <div class="num-edit-detail">
-              <van-button type="default" size="mini" @click="itemDelete">-</van-button>
-              <div class="num-count">
-                <input class="num-count-input" type="number" v-model="num"></div>
-              <van-button type="default" size="mini" @click="itemPlus">+</van-button>
+        <div class="item-1">
+          <div class="item-1-left">
+            <img :src="item.smallimage" alt="" class="item-1-img">
+          </div>
+          <div class="item-1-right">
+            <div class="itemdetail">{{item.name}}</div>
+            <div class="num-edit">
+              <div class="price">{{item.salePrice | moneyFormat}}</div>
+              <div class="num-edit-detail">
+                <van-button class="vbtn" type="primary" size="mini" color="#53f" text="-" @click="itemDelete(item.id,item.num)"></van-button>
+                <div class="num-count">
+                  <input class="num-count-input" type="number" v-model="item.num">
+                </div>
+                <van-button class="vbtn" type="primary"  size="mini" color="" text="+" @click="itemPlus">+</van-button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
     <div id="submit" class="submit" >
       <van-submit-bar
@@ -54,14 +56,14 @@
 
 <script>
 import { ActionSheet } from 'vant';
-import { Toast } from 'vant';
-import {mapState} from 'vuex'
+import { Toast , Dialog} from 'vant';
+import {mapState, mapMutations} from 'vuex'
   export default {
     name:'Cart',
     data() {
       return {
         checked:false,
-        num:1,
+        // num:1,
         show: false,
         actions: [
           { name: '清空购物车' ,color: 'rgb(240, 74, 74)',index:0},
@@ -73,6 +75,7 @@ import {mapState} from 'vuex'
       ...mapState(["shopCart"])
     },
     methods:{
+      ...mapMutations(['DELETE_SHOP_ATCART']),
       showSheet(){
         this.show = !this.show;
         // Toast('show');
@@ -91,18 +94,27 @@ import {mapState} from 'vuex'
         // Toast('cancel');
       },
       
-      itemDelete(){
-        if(this.num===1){
-          // console.log('不能再减了')
-          Toast.fail('不能再减啦');
-        }else{
-          this.num = Number(this.num);
-          this.num -=1 
+      //删除商品
+      itemDelete(itemId,itemNum,){
+        if(itemNum>1){
+          this.DELETE_SHOP_ATCART({itemId})
+          Toast.fail('减少了一件了');
+        }else if(itemNum === 1){
+          Dialog.confirm({
+            title: '真的要删除这件商品吗',
+            message: '',
+          }).then(() => {
+            // on confirm
+            // console.log('dele')
+            this.DELETE_SHOP_ATCART({itemId})
+          }).catch(() => {
+            // on cancel
+          });
         }
       },
       itemPlus(){
-        this.num = Number(this.num);
-        this.num +=1 
+        // this.num = Number(this.num);
+        // this.num +=1 
       }
     },
   }
@@ -112,7 +124,7 @@ import {mapState} from 'vuex'
   #cart{
     width: 100%;
     height: 100%;
-    background-color: #f5f5f5;
+    // background-color: #f5f5f5;
   }
   .header{
     line-height: 0.8rem;
@@ -145,12 +157,18 @@ import {mapState} from 'vuex'
     height: 1rem;
   }
   .item{
-    position: relative;
     
+  }
+  .item-d{
+    width: 100%;
+    height: 1.6rem;
+    position: relative;
+    // border-style:none none dashed none; 
+    margin-top: 0.25rem;
   }
   .selected{
     position: absolute;
-      left: 0.25rem;
+    left: 0.25rem;
     top: 1rem;
   }
   .item-1{
@@ -176,10 +194,11 @@ import {mapState} from 'vuex'
     flex-direction: column;
   }
   .itemdetail{
-    font-size: 0.3rem;
+    font-size: 0.2rem;
     height: 1rem;
     line-height: 1rem;
     margin-left: 0.1rem;
+    width: 4rem;
     flex-wrap: wrap;
     overflow: hidden;
   }
@@ -209,12 +228,33 @@ import {mapState} from 'vuex'
     width: 0.4rem;
     font-size: 0.3rem;
     width: 0.6rem;
-    height: 0.3rem;
+    height: 0.4rem;
     text-align: center;
     background-color: rgb(240, 240, 240);
     background:none;  
     outline:none;  
     border:none;
+  }
+  .vbtn{
+    width: 0.2rem;
+    height: 0.4rem;
+    // text-align: center
+    // line-height:0.3rem;
+  }
+  button{
+    // margin: 0;
+    // padding: 0;
+    // border: none;  //自定义边框
+    // outline: none;    //消除默认点击蓝色边框效果
+    // background: none;
+    // // background-color: transparent;
+    // border-radius: 10px;
+    // border: none;
+    // outline: none;
+    // width: 0.5rem;
+    // height: 0.5rem;
+    // -webkit-appearance: none;
+    // -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 
 </style>
