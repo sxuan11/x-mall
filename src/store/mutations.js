@@ -31,7 +31,7 @@ export default {
   },
 
   //页面初始化，先获取当前浏览器的购物车数据
-  [INIT_SHOP_CART](state,{}){
+  [INIT_SHOP_CART](state){
     let initShopCart  = getStore('shopCart')
     if (initShopCart) {
       state.shopCart = JSON.parse(initShopCart)
@@ -46,11 +46,8 @@ export default {
     if(goods){//查找产品
       if (goods['num']>0) {
           goods['num']--;
-          console.log("--")
-          console.log(goods['num'])
           if(goods['num']===0){
             delete shopCart[itemId];
-            console.log("ddd")
           }      
       }else{
         goods = null

@@ -27,11 +27,11 @@
             <div class="num-edit">
               <div class="price">{{item.salePrice | moneyFormat}}</div>
               <div class="num-edit-detail">
-                <van-button class="vbtn" type="primary" size="mini" color="#53f" text="-" @click="itemDelete(item.id,item.num)"></van-button>
+                <van-button class="vbtn" type="primary" size="mini" color="#38f" text="-" @click="itemDelete(item.id,item.num)"></van-button>
                 <div class="num-count">
                   <input class="num-count-input" type="number" v-model="item.num">
                 </div>
-                <van-button class="vbtn" type="primary"  size="mini" color="" text="+" @click="itemPlus">+</van-button>
+                <van-button class="vbtn" type="primary"  size="mini" color="#38f" text="+" @click="itemPlus(item.id,item.name,item.smallImage,item.price)">+</van-button>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ import {mapState, mapMutations} from 'vuex'
       ...mapState(["shopCart"])
     },
     methods:{
-      ...mapMutations(['DELETE_SHOP_ATCART']),
+      ...mapMutations(['DELETE_SHOP_ATCART','ADD_GOODS']),
       showSheet(){
         this.show = !this.show;
         // Toast('show');
@@ -95,7 +95,7 @@ import {mapState, mapMutations} from 'vuex'
       },
       
       //删除商品
-      itemDelete(itemId,itemNum,){
+      itemDelete(itemId,itemNum){
         if(itemNum>1){
           this.DELETE_SHOP_ATCART({itemId})
           Toast.fail('减少了一件了');
@@ -112,9 +112,16 @@ import {mapState, mapMutations} from 'vuex'
           });
         }
       },
-      itemPlus(){
+      //增加商品
+      itemPlus(itemId,itemName, smallImage, itemPrice){
         // this.num = Number(this.num);
         // this.num +=1 
+        this.ADD_GOODS({
+          itemId,
+          itemName,
+          smallImage,
+          itemPrice,
+        })
       }
     },
   }
@@ -215,7 +222,9 @@ import {mapState, mapMutations} from 'vuex'
   }
   .num-edit-detail{
     display: flex;
-    margin-left: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 0.6rem;
     
   }
   .num-count{
