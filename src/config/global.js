@@ -40,17 +40,21 @@ export const setStore = (name,content)=>{
   if(typeof content !== 'string'){
     content = JSON.stringify(content)
   }
-  window.localStorage.setItem()
+  window.localStorage.setItem(name,content)
 }
-
-
 
  /**
  * 本地化获取
  */
- 
- 
+export const getStore = (name)=>{
+  if (!name) return;
+  return window.localStorage.getItem(name)
+} 
  
  /**
  * 本地化删除
  */
+export const removeStore = (name)=>{
+  if (!name) return;
+  return window.localStorage.removeItem(name)
+} 

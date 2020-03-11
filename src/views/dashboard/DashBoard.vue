@@ -13,6 +13,7 @@
 
 <script>
 import { Notify } from 'vant';
+import {mapState , mapMutations} from 'vuex'
   export default {
     data() {
       return {
@@ -27,7 +28,22 @@ import { Notify } from 'vant';
       }
     },
     methods:{
-     
+      ...mapMutations(["INIT_SHOP_CART"])
+    },
+    computed:{
+      ...mapState(["shopCart"]),
+      goodsNum(){
+        if(this.shopCart){
+          
+        }else{
+          return 0;
+        }
+
+      }
+    },
+    mounted(){
+      //获取当前购物车的数据
+      this.INIT_SHOP_CART()
     }
   }
 </script>

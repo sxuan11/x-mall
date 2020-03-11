@@ -55,6 +55,7 @@
 <script>
 import { ActionSheet } from 'vant';
 import { Toast } from 'vant';
+import {mapState} from 'vuex'
   export default {
     name:'Cart',
     data() {
@@ -67,6 +68,9 @@ import { Toast } from 'vant';
 
         ],
       }
+    },
+    computed: {
+      ...mapState(["shopCart"])
     },
     methods:{
       showSheet(){
