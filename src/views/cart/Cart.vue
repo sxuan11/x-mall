@@ -15,8 +15,8 @@
     </div>
     <div class="item">
       <div v-for="(item,index) in shopCart" :key="index" class="item-d">
-        <div class="selected">
-          <van-checkbox v-model="item.checked"></van-checkbox>
+        <div class="selected" >
+          <van-checkbox @click="singleGoodsSelect(item.id)" v-model="item.checked"></van-checkbox>
         </div>
         <div class="item-1">
           <div class="item-1-left">
@@ -45,7 +45,7 @@
         @submit="onSubmit"
         class="van-submit-bar"
       >
-        <van-checkbox v-model="checked">全选</van-checkbox>
+        <van-checkbox v-model="checked" @click="allGoodsSelet(checked)">全选</van-checkbox>
         <span slot="tip">
           你的收货地址不支持同城送, <span>修改地址</span>
         </span>
@@ -62,7 +62,7 @@ import {mapState, mapMutations} from 'vuex'
     name:'Cart',
     data() {
       return {
-        checked:false,
+        checked:true,
         // num:1,
         show: false,
         actions: [
@@ -75,7 +75,7 @@ import {mapState, mapMutations} from 'vuex'
       ...mapState(["shopCart"])
     },
     methods:{
-      ...mapMutations(['DELETE_SHOP_ATCART','ADD_GOODS']),
+      ...mapMutations(['DELETE_SHOP_ATCART','ADD_GOODS','SELECT_SINGLE_GOODS','SELECT_ALL_GOODS']),
       showSheet(){
         this.show = !this.show;
         // Toast('show');
@@ -122,6 +122,16 @@ import {mapState, mapMutations} from 'vuex'
           smallImage,
           itemPrice,
         })
+      },
+
+      //单个商品的选择和取消
+      singleGoodsSelect(itemId){
+        this.SELECT_SINGLE_GOODS({itemId})
+      },
+
+      //全部商品的选中
+      allGoodsSelet(isSelected){
+        this.SELECT_ALL_GOODS({isSelected})
       }
     },
   }

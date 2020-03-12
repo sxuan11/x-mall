@@ -1,9 +1,12 @@
 import {
   ADD_GOODS,
   INIT_SHOP_CART,
-  DELETE_SHOP_ATCART
+  DELETE_SHOP_ATCART,
+  SELECT_SINGLE_GOODS,
+  SELECT_ALL_GOODS
 } from './mutations-type';
 import {getStore, setStore, removeStore} from '../config/global'
+import Vue from 'vue'
 
 export default {
   //购物车添加数据
@@ -59,25 +62,34 @@ export default {
     // let deleteShopCart = removeStore('shopCart')
   },
 
-//   [DELETE_SHOP_ATCART](state, {itemId}){
-//     let shopCart = state.shopCart;
-//     let goods = shopCart[itemId];
-//     if(goods){ // 找到该商品
-//         if(goods['num'] > 0){
-//             goods['num']--;
-//             // 3.1 判断是否只有0个
-//             if(goods['num'] === 0){
-//                 delete shopCart[itemId];
-//             }
-//         }else {
-//             goods = null;
-//         }
-//         // 3.2 同时数据
-//         state.shopCart = {...shopCart};
-//         setStore('shopCart', state.shopCart);
-//     }
-// },
+  //商品的选中
+  [SELECT_SINGLE_GOODS](state,{itemId}){
+    let shopCart  = state.shopCart;
+    let goods = shopCart[itemId];
+    if (goods) {
+      if (goods.checked) {//判断是否有该属性
+        goods.checked = !goods.checked;
+      }else{
+        Vue.set(goods,"checked",true)
+      }
+      //同步数据
+      state.shopCart = {...shopCart};
+      setStore('shopCart',state.shopCart)
+    }
+  },
 
-
+  //商品全选
+  [SELECT_ALL_GOODS](state,{isSelected}){
+    let shopCart  = state.shopCart;
+    Object.values(shopCart).forEach((goods,index)=>{
+      if(isSelected == true){
+        goods.checked = false
+      }else if(isSelected == false){
+        goods.checked = true
+      }
+      state.shopCart = {...shopCart};
+      setStore('shopCart',state.shopCart)
+    })
+  }
 
 }
