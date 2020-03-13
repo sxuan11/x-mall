@@ -83,7 +83,7 @@ export default {
     let shopCart  = state.shopCart;
     Object.values(shopCart).forEach((goods,index)=>{
       if(isSelected == true){
-        goods.checked = false
+        goods.checked = !goods.checked
       }else if(isSelected == false){
         goods.checked = true
       }

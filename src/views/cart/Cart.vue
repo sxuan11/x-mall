@@ -45,7 +45,7 @@
         @submit="onSubmit"
         class="van-submit-bar"
       >
-        <van-checkbox v-model="checked" @click="allGoodsSelet(checked)">全选</van-checkbox>
+        <van-checkbox v-model="checked" @click="allGoodsSelet(isSelectedAll)" :change="isSelectedAll">全选</van-checkbox>
         <span slot="tip">
           你的收货地址不支持同城送, <span>修改地址</span>
         </span>
@@ -72,7 +72,22 @@ import {mapState, mapMutations} from 'vuex'
       }
     },
     computed: {
-      ...mapState(["shopCart"])
+      ...mapState(["shopCart"]),
+      //判断是否全选
+      isSelectedAll(){  
+        this.checked = true
+        Object.values(this.shopCart).forEach((goods,index)=>{
+          if(goods.checked == false){
+            this.checked=false;
+            console.log("fff")
+          }
+        })
+        return this.checked;
+      },
+      //计算商品总价
+      counteAllPrice(){
+        
+      }
     },
     methods:{
       ...mapMutations(['DELETE_SHOP_ATCART','ADD_GOODS','SELECT_SINGLE_GOODS','SELECT_ALL_GOODS']),
