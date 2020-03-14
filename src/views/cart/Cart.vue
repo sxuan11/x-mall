@@ -40,14 +40,15 @@
     </div>
     <div id="submit" class="submit" >
       <van-submit-bar
-        :price="5999"
-        button-text="提交订单"
+        :price="counteAllPrice"
+        :button-text="goodsCount1"
         @submit="onSubmit"
         class="van-submit-bar"
+        :change="counteAllPrice"
       >
-        <van-checkbox v-model="checked" @click="allGoodsSelet(isSelectedAll)" :change="isSelectedAll">全选</van-checkbox>
+        <van-checkbox v-model="checked" @click="allGoodsSelet(isSelectedAll)" :change="isSelectedAll" >全选</van-checkbox>
         <span slot="tip">
-          你的收货地址不支持同城送, <span>修改地址</span>
+          你的收货地址不支持同城送, <span></span>
         </span>
       </van-submit-bar>
       </div>
@@ -73,20 +74,32 @@ import {mapState, mapMutations} from 'vuex'
     },
     computed: {
       ...mapState(["shopCart"]),
+      //商品当前的数量
+      goodsCount(){
+        return Object.keys(this.shopCart).length;
+      },
+      goodsCount1(){
+        return "提交订单("+Object.keys(this.shopCart).length+")";
+      },
       //判断是否全选
       isSelectedAll(){  
-        this.checked = true
+        this.checked = this.goodsCount>0;
         Object.values(this.shopCart).forEach((goods,index)=>{
           if(goods.checked == false){
             this.checked=false;
-            console.log("fff")
           }
         })
         return this.checked;
       },
       //计算商品总价
       counteAllPrice(){
-        
+        let totalPrice = 0
+        Object.values(this.shopCart).forEach((goods,index)=>{
+          if(goods.checked == true){
+            totalPrice = totalPrice +((goods.salePrice * goods.num)*100)
+          }
+        })
+        return totalPrice;
       }
     },
     methods:{
