@@ -24,7 +24,14 @@ const routes = [
   {
     path: '/cart',
     name: 'cart',
-    component: () => import(/* webpackChunkName: "cart" */ './../views/cart/Cart.vue')
+    component: () => import(/* webpackChunkName: "cart" */ './../views/cart/Cart.vue'),
+    children:[
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import(/* webpackChunkName: "order" */ './../views/order/Order.vue')
+      }
+    ],
   },
   {
     path: '/category',
@@ -33,7 +40,16 @@ const routes = [
       keepAlive:true,
     },
     component: () => import(/* webpackChunkName: "category" */ './../views/category/Category.vue')
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: () => import(/* webpackChunkName: "order" */ './../views/order/Order.vue'),
+    children:[
+      
+    ]
   }
+
 ]
 
 const router = new VueRouter({

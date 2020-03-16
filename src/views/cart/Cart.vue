@@ -1,7 +1,8 @@
 <template>
   <div id='cart'>
     <div class="header">
-      <div>&lt;</div>
+      <!-- <div to="/home"></div> -->
+      <router-link tag="div" to='/home'>&lt;</router-link>
       <div>购物车</div>
       <div @click="showSheet">···
         <van-action-sheet
@@ -29,7 +30,7 @@
               <div class="num-edit-detail">
                 <van-button class="vbtn" type="primary" size="mini" color="#38f" text="-" @click="itemDelete(item.id,item.num)"></van-button>
                 <div class="num-count">
-                  <input class="num-count-input" type="number" v-model="item.num">
+                  <input class="num-count-input" type="number" v-model="item.num" >
                 </div>
                 <van-button class="vbtn" type="primary"  size="mini" color="#38f" text="+" @click="itemPlus(item.id,item.name,item.smallImage,item.price)">+</van-button>
               </div>
@@ -47,9 +48,9 @@
         :change="counteAllPrice"
       >
         <van-checkbox v-model="checked" @click="allGoodsSelet(isSelectedAll)" :change="isSelectedAll" >全选</van-checkbox>
-        <span slot="tip">
+        <!-- <span slot="tip">
           你的收货地址不支持同城送, <span></span>
-        </span>
+        </span> -->
       </van-submit-bar>
       </div>
   </div>
@@ -103,18 +104,31 @@ import {mapState, mapMutations} from 'vuex'
       }
     },
     methods:{
-      ...mapMutations(['DELETE_SHOP_ATCART','ADD_GOODS','SELECT_SINGLE_GOODS','SELECT_ALL_GOODS']),
+      ...mapMutations(['DELETE_SHOP_ATCART','ADD_GOODS','SELECT_SINGLE_GOODS','SELECT_ALL_GOODS','CLEAR_SHOP_CART']),
+
       showSheet(){
         this.show = !this.show;
-        // Toast('show');
+        
       },
       onSubmit(){
-
+        this.$router.push({path:'/order'})
       },
       onSelect(item){
         this.show = false;
         if(item.index === 0){
-          Toast(item.index);
+
+          Dialog.confirm({
+            title: '真的要清空购物车吗',
+            message: '',
+          }).then(() => {
+            // on confirm
+            // console.log('dele')
+            this.CLEAR_SHOP_CART()
+            Toast("清空购物车成功");
+          }).catch(() => {
+            // on cancel
+          });
+          
         }
       },
       onCancel() {

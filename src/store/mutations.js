@@ -3,7 +3,8 @@ import {
   INIT_SHOP_CART,
   DELETE_SHOP_ATCART,
   SELECT_SINGLE_GOODS,
-  SELECT_ALL_GOODS
+  SELECT_ALL_GOODS,
+  CLEAR_SHOP_CART
 } from './mutations-type';
 import {getStore, setStore, removeStore} from '../config/global'
 import Vue from 'vue'
@@ -90,6 +91,13 @@ export default {
       state.shopCart = {...shopCart};
       setStore('shopCart',state.shopCart)
     })
+  },
+
+  //清空购物车 
+  [CLEAR_SHOP_CART](state){
+    state.shopCart = {};
+    state.shopCart = {...shopCart}
+    setStore('shopCart',state.shopCart)
   }
 
 }

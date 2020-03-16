@@ -5,8 +5,26 @@ import { ActionSheet } from 'vant';
 import { Field } from 'vant';
 import { Cell, CellGroup } from 'vant';
 import { Dialog } from 'vant';
+import { ContactCard, ContactList, ContactEdit } from 'vant';
+import { AddressEdit } from 'vant';
+import { AddressList } from 'vant';
+import { Area } from 'vant';
+import { NavBar } from 'vant';
+import { Popup } from 'vant';
+import { DatetimePicker } from 'vant';
+import { CouponCell, CouponList } from 'vant';
 
-// 全局注册
+Vue.use(CouponCell);
+Vue.use(CouponList);
+Vue.use(DatetimePicker);
+Vue.use(Popup);
+Vue.use(NavBar);
+Vue.use(Area);
+Vue.use(AddressList);
+Vue.use(AddressEdit);
+Vue.use(ContactCard);
+Vue.use(ContactList);
+Vue.use(ContactEdit);
 Vue.use(Dialog);
 Vue.use(Cell);
 Vue.use(CellGroup);
