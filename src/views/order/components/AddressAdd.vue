@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="z-index:3000">
     <van-nav-bar
-      title="地址编辑"
+      title="新增地址"
       left-text="返回"
       right-text="登录"
       left-arrow
@@ -12,13 +12,11 @@
     <van-address-edit
       :area-list="areaList"
       show-postal
-      show-delete
       show-set-default
       show-search-result
       :search-result="searchResult"
       :area-columns-placeholder="['请选择', '请选择', '请选择']"
       @save="onSave"
-      @delete="onDelete"
       @change-detail="onChangeDetail"
     />
   </div>
@@ -37,9 +35,6 @@
     methods: {
       onSave() {
         Toast('save');
-      },
-      onDelete() {
-        Toast('delete');
       },
       onClickLeft(){
         this.$router.back()

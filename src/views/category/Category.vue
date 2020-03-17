@@ -45,8 +45,8 @@
     import PubSub from 'pubsub-js';
     import { Toast } from 'vant';
 
-		// 引入vuex
-		import {mapState,mapMutations} from 'vuex'
+	// 引入vuex
+	import {mapState,mapMutations} from 'vuex'
 
     export default {
         name: "Category",

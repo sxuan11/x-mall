@@ -13,7 +13,10 @@ import { NavBar } from 'vant';
 import { Popup } from 'vant';
 import { DatetimePicker } from 'vant';
 import { CouponCell, CouponList } from 'vant';
+import { RadioGroup, Radio } from 'vant';
 
+Vue.use(Radio);
+Vue.use(RadioGroup);
 Vue.use(CouponCell);
 Vue.use(CouponList);
 Vue.use(DatetimePicker);

@@ -3,11 +3,29 @@
     <van-tabbar 
     v-model="active"
     >
-      <van-tabbar-item icon="home-o" to='home'>首页</van-tabbar-item>
-      <van-tabbar-item icon="apps-o" to='category'>分类</van-tabbar-item>
-      <van-tabbar-item icon="cart-o" to='cart' :info="goodsNum >0 ? goodsNum :''">购物车</van-tabbar-item>
-      <van-tabbar-item icon="contact" to="profile" info="2">我的</van-tabbar-item>
+      <van-tabbar-item icon="home-o" replace to='home'>首页</van-tabbar-item>
+      <van-tabbar-item icon="apps-o" replace to='category'>分类</van-tabbar-item>
+      <van-tabbar-item icon="cart-o" replace to='cart' :info="goodsNum >0 ? goodsNum :''">购物车</van-tabbar-item>
+      <van-tabbar-item icon="contact" replace to="profile" info="2">我的</van-tabbar-item>
     </van-tabbar>
+      <!-- <van-tabbar v-model="active" >
+        <van-tabbar-item icon="home-o" replace to="/dashboard/home">
+            <span>首页</span>
+        </van-tabbar-item>
+        <van-tabbar-item icon="apps-o" replace to="/dashboard/category">
+            <span>分类</span>
+        </van-tabbar-item>
+        <van-tabbar-item icon="cart-o" replace to="/dashboard/cart" :info="goodsNum > 0 ? goodsNum : ''">
+            <span>购物车</span>
+        </van-tabbar-item>
+        <van-tabbar-item icon="contact" replace to="/dashboard/profile">
+            <span>我的</span>
+        </van-tabbar-item>
+      </van-tabbar>
+      <keep-alive>
+          <router-view v-if="$route.meta.keepAlive"/>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"/> -->
   </div>
 </template>
 
@@ -22,7 +40,7 @@ import {mapState , mapMutations} from 'vuex'
     },
     watch:{
       active(value){
-        console.log(value)
+        console.log(this.$route.meta)
         let tabbarActiveIndex = value
         sessionStorage.setItem('tabbarActiveIndex',value)
       }

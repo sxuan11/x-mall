@@ -1,24 +1,29 @@
 <template>
   <div id="order"> 
-
+    <div>
     <!-- 导航条 -->
     <van-nav-bar
       title="确认订单"
       left-text="返回"
       right-text="登录"
       left-arrow
+      :fixed=true
+      :border=true
       @click-left="onClickLeft"
       @click-right="onClickRight"
     />
+
     <van-contact-card
-      :type="cardType"
-      :name="currentContact.name"
-      :tel="currentContact.tel"
-      @click="showList = true"
+      :type="address_type"
+      :name="address_name"
+      :tel="address_phone"
+      add-text="选择收货地址"
+      @click="chooseAddress"
+      style="margin-top: 0.8rem"
     />
 
     <!-- 联系人列表 -->
-    <van-popup v-model="showList" position="bottom">
+    <!-- <van-popup v-model="showList" position="bottom">
       <van-contact-list
         v-model="chosenContactId"
         :list="list"
@@ -28,14 +33,14 @@
       />
     </van-popup>
     <!-- 联系人编辑 -->
-    <van-popup v-model="showEdit" position="bottom">
+    <!--<van-popup v-model="showEdit" position="bottom">
       <van-contact-edit
         :contact-info="editingContact"
         :is-edit="isEdit"
         @save="onSave"
         @delete="onDelete"
-      />
-    </van-popup>
+      /> -->
+    <!-- </van-popup> -->
 
     <van-cell-group>
     <!-- 送达时间选择 -->
@@ -88,8 +93,41 @@
 
     <van-cell-group>
     <!-- 支付方式 -->
-    <van-cell title="支付方式" value="微信">
+    <van-cell title="支付方式" is-link :value="paySelecyName" @click="showPayCli">
     </van-cell>
+    <van-popup 
+        position="bottom"
+        :style="{ height: '25%' }"
+        v-model="showPay"
+    > 
+      <!-- <van-radio-group v-model="paySelect" @change="selectPay(radio)">
+        <van-cell-group>
+          <van-cell title="微信" clickable @click="radio = '1'">
+            <van-radio slot="right-icon" name="1" />
+          </van-cell>
+          <van-cell title="支付宝" clickable @click="radio = '2'">
+            <van-radio slot="right-icon" name="2" />
+          </van-cell>
+        </van-cell-group>
+      </van-radio-group> -->
+
+      <!-- <van-radio-group v-model="paySelect" @change="selectPay(radio)" class="paySelect">
+        <van-radio name="1" shape="square" class="paySelect" @click="radio = '1'">微信</van-radio>
+        <van-radio name="2" shape="square" class="paySelect" @click="radio = '2'">支付宝</van-radio>
+      </van-radio-group> -->
+
+      <van-radio-group v-model="paySelect" @change="selectPay(radio)">
+        <van-cell-group>
+          <van-cell title="微信" clickable @click="radio = 1">
+            <van-radio slot="right-icon" name=1 />
+          </van-cell>
+          <van-cell title="支付宝" clickable @click="radio = 2">
+            <van-radio slot="right-icon" name=2 />
+          </van-cell>
+        </van-cell-group>
+      </van-radio-group>
+
+    </van-popup>
     </van-cell-group>
 
     <!-- 备注 -->
@@ -118,14 +156,14 @@
     <van-coupon-cell
       :coupons="coupons"
       :chosen-coupon="chosenCoupon"
-      @click="showList = true"
+      @click="showListCoupon = true"
     />
     <!-- 优惠券列表 -->
     <van-popup
-      v-model="showList"
+      v-model="showListCoupon"
       round
       position="bottom"
-      style="height: 90%; padding-top: 4px;"
+      style="height: 70%; padding-top: 4px;"
     >
       <van-coupon-list
         :coupons="coupons"
@@ -143,7 +181,9 @@
       @submit="onSubmit"
       :loading="loading"
     />
+    </div>
   </div>
+ 
 </template>
 
 <script>
@@ -156,33 +196,44 @@
     startAt: 1489104000,
     endAt: 1514592000,
     valueDesc: '1.5',
-    unitDesc: '元'
+    unitDesc: '元',
   };
+  
+  import PubSub from 'pubsub-js';
   import { Toast , Popup } from 'vant';
+
   export default {
     data() {
       return {
-         chosenContactId: null,
-          editingContact: {},
-          showList: false,
-          showEdit: false,
-          isEdit: false,
-          list: [{
-            name: '张三',
-            tel: '13000000000',
-            id: 0
-          }],
-          loading:false,
-          noSelect:'未指定',
-          timeShow: false,
-          shopShow: false,
-          minDate: new Date(),
-          maxDate: new Date(2025, 10, 1),
-          currentDate: 0,
-          message:'',
-          chosenCoupon: -1,
-          coupons: [coupon],
-          disabledCoupons: [coupon]
+        address_type: 'add', // 地址卡片类型
+        address_name: null, // 收货人
+        address_phone: null, // 收货人电话
+        address_id: null, // 收货人地址ID
+        chosenContactId: null,
+        editingContact: {},
+        showList: false,
+        showListCoupon: false,
+        showEdit: false,
+        showPay:false,
+        isEdit: false,
+        paySelect:'1',
+        paySelecyName:"微信",
+        list: [{
+          name: '张三',
+          tel: '13000000000',
+          id: 0
+        }],
+        loading:false,
+        noSelect:'未指定',
+        timeShow: false,
+        shopShow: false,
+        minDate: new Date(),
+        maxDate: new Date(2025, 10, 1),
+        currentDate: 0,
+        message:'',
+        chosenCoupon: -1,
+        coupons: [coupon],
+        disabledCoupons: [coupon]
       }
     },
     methods: {
@@ -197,11 +248,16 @@
         Toast('登录');
       },
       onChange(index) {
-      this.showList = false;
+      this.showListCoupon = false;
       this.chosenCoupon = index;
       },
       onExchange(code) {
         this.coupons.push(coupon);
+      },
+
+      //选择地址
+      chooseAddress(){
+        this.$router.push('addresslist')
       },
 
       // 添加联系人
@@ -255,6 +311,21 @@
         this.shopShow = true;
       },
 
+      //支付方式选择
+      showPayCli(){
+        this.showPay = true;
+      },
+      selectPay(e){
+        if(e === 1){
+          this.paySelecyName  = "微信";
+          // this.paySelect = 1
+        }else{
+          this.paySelecyName  = "支付宝";
+          // this.paySelect = 2
+        }
+      },
+
+
       //点击完成按钮时触发的事件
       confirm(){
         this.timeShow= false
@@ -276,6 +347,16 @@
         return id !== null ? this.list.filter(item => item.id === id)[0] : {};
       }
     },
+    mounted(){
+      PubSub.subscribe('AddressSelect',(msg,item)=>{
+        if(msg='AddressSelect'){
+          this.address_type = 'edit';
+          this.address_name = item.name;
+          this.address_phone = item.tel;
+          this.address_id = item.id;
+        }
+      })
+    }
   }
 </script>
 
@@ -297,5 +378,9 @@
 .shopListDetailImg{
   width: 1.5rem;
   height: 1.5rem;
+}
+.paySelect{
+  font-size: 0.5rem;
+  height: 0.6rem;
 }
 </style>
