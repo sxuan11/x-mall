@@ -177,7 +177,7 @@
     <!-- 订单提交 -->
     <van-submit-bar
       :price="3050"
-      button-text="提交订单"
+      button-text="去支付"
       @submit="onSubmit"
       :loading="loading"
     />
