@@ -5,6 +5,7 @@ import store from './store'
 import './plugins/fastclick.js'
 import './plugins/element.js'
 import './plugins/vant.js'
+import './plugins/antd.js'
 import './config/rem.js'
 
 //引入全局过滤器

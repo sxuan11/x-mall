@@ -13,7 +13,7 @@
           <div class="personInfo">
             <img src="./img/pic.jpg" alt="" class="personImg"> 
             <div>
-              <span class="personName" >sxuan</span>
+              <span class="personName">sxuan</span>
             </div>
           </div>
         </div>

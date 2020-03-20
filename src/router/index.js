@@ -85,7 +85,17 @@ const routes = [
     path: '/addressedit',
     name: 'addressedit',
     component: () => import(/* webpackChunkName: "addressedit" */ './../views/order/components/AddressEdit.vue')
-  }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "login" */ './../views/login/Login.vue')
+  },
+  {
+    path: '/inputcode',
+    name: 'inputcode',
+    component: () => import(/* webpackChunkName: "login" */ './../views/login/InputCode.vue')
+  },
   
 
   // {path: '/', redirect: '/dashboard'},

@@ -14,7 +14,12 @@ import { Popup } from 'vant';
 import { DatetimePicker } from 'vant';
 import { CouponCell, CouponList } from 'vant';
 import { RadioGroup, Radio } from 'vant';
+import { Form } from 'vant';
+import { PasswordInput, NumberKeyboard } from 'vant';
 
+Vue.use(PasswordInput);
+Vue.use(NumberKeyboard)
+Vue.use(Form);
 Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(CouponCell);
