@@ -45,6 +45,7 @@
         this.$router.back()
       },
       getcode(){
+        Toast.success('验证码发送成功')
         this.$router.push('/inputcode')
       },
       checkInput(userPhone){

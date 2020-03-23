@@ -8,7 +8,7 @@
     <!-- 密码输入框 -->
     <van-password-input
       :value="value"
-      info="密码为 6 位数字"
+      info="验证码为6位"
       :focused="showKeyboard"
       @focus="showKeyboard = true"
       :mask='false'

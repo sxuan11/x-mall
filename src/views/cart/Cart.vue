@@ -1,6 +1,7 @@
 <template>
   <div id='cart'>
-    <div class="header">
+    <div v-if="userInfo.token">
+          <div class="header">
       <!-- <div to="/home"></div> -->
       <router-link tag="div" to='/home'>&lt;</router-link>
       <div>购物车</div>
@@ -53,13 +54,16 @@
         </span> -->
       </van-submit-bar>
       </div>
+    </div>
+    <div v-else><noLogin></noLogin></div>
   </div>
 </template>
 
 <script>
 import { ActionSheet } from 'vant';
 import { Toast , Dialog} from 'vant';
-import {mapState, mapMutations} from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+import noLogin from './../login/SelectLogin'
   export default {
     name:'Cart',
     data() {
@@ -73,8 +77,11 @@ import {mapState, mapMutations} from 'vuex'
         ],
       }
     },
+    components:{
+      noLogin
+    },
     computed: {
-      ...mapState(["shopCart"]),
+      ...mapState(["shopCart","userInfo"]),
       //商品当前的数量
       goodsCount(){
         return Object.keys(this.shopCart).length;

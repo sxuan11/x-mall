@@ -5,4 +5,8 @@ export default {
      * "itemId:{}"
      */
   },
+  //用户信息
+  userInfo:{
+    token:'123'
+  }
 }
