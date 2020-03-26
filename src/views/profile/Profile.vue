@@ -1,5 +1,6 @@
 <template>
   <div id='profile'>
+    <div v-if="userInfo.token">
     <van-nav-bar
       title="我的"
       :fixed="true"
@@ -12,8 +13,9 @@
         <div>
           <div class="personInfo">
             <img src="./img/pic.jpg" alt="" class="personImg"> 
-            <div>
-              <span class="personName">sxuan</span>
+            <div class="info">
+              <span class="personName">{{userInfo.real_name}}</span>
+              <span class="phoneName">{{userInfo.phone}}</span>
             </div>
           </div>
         </div>
@@ -66,19 +68,34 @@
           size="0.35rem"
         />
     </van-cell>
+    </div>
+    <div v-else><noLogin/></div>
   </div>
 </template>
 
 <script>
+  import noLogin from './../login/SelectLoginPro'
+  import { mapState, mapMutations } from 'vuex'
   export default {
-    name:'Profile'
+    name:'Profile',
+    data() {
+      return {
+        
+      }
+    },
+    components:{
+      noLogin,
+    },
+    computed:{
+      ...mapState(["userInfo"])
+    }
   }
 </script>
 
 <style lang="scss" scoped>
 #profile{
   width: 100%;
-  height: 100%;
+  height: calc(100vh);
   background-color: #f5f5f5;
 }
 .van-nav-bar{
@@ -99,8 +116,19 @@
   border-radius: 0.8rem;
   border: 0.05rem solid #fff;
 }
+.info{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
 .personName{
   font-size: 0.5rem;
+  margin-left: 0.2rem;
+  color: #fff;
+}
+.phoneName{
+  font-size: 0.2rem;
   margin-left: 0.2rem;
   color: #fff;
 }

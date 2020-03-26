@@ -89,7 +89,14 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ './../views/login/Login.vue')
+    component: () => import(/* webpackChunkName: "login" */ './../views/login/Login.vue'),
+    children :[
+      // {
+      //   path: 'inputcode',
+      //   name: 'inputcode',
+      //   component: () => import(/* webpackChunkName: "login" */ './../views/login/InputCode.vue')
+      // },
+    ]
   },
   {
     path: '/inputcode',

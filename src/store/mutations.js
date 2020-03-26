@@ -4,7 +4,9 @@ import {
   DELETE_SHOP_ATCART,
   SELECT_SINGLE_GOODS,
   SELECT_ALL_GOODS,
-  CLEAR_SHOP_CART
+  CLEAR_SHOP_CART,
+  SET_USER_PHONE,
+  SET_USER_INFO,
 } from './mutations-type';
 import {getStore, setStore, removeStore} from '../config/global'
 import Vue from 'vue'
@@ -98,6 +100,15 @@ export default {
     state.shopCart = {};
     state.shopCart = {...shopCart}
     setStore('shopCart',state.shopCart)
-  }
+  },
 
+  //用户注册手机号
+  [SET_USER_PHONE](state,inputPhone){
+    state.userPhone = inputPhone
+  },
+
+  //存入用户信息
+  [SET_USER_INFO](state,getUserInfo){
+    state.userInfo = getUserInfo
+  }
 }

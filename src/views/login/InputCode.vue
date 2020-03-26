@@ -24,24 +24,50 @@
 </template>
 
 <script>
+  import { phoneCodeLogin } from './../../server/api/index'
+  import { mapGetters , mapMutations} from 'vuex'
+  import { Toast } from 'vant'
   export default {
     data() {
       return {
         showKeyboard: true,
-        value:''
+        value:'',
+        userInfo:null,
       }
     },
     methods: {
+      ...mapMutations(['SET_USER_INFO']),
       onClickLeft(){
         this.$router.back();
       },
-      onInput(key) {
-      this.value = (this.value + key).slice(0, 6);
+      async onInput(key) {
+        this.value = (this.value + key).slice(0, 6);
+        if (this.value.length === 6) {
+          let result = await phoneCodeLogin(this.userPhone,this.value)
+          // console.log(result)
+          if (result.success_code === 200){
+            this.userInfo = result.data
+            console.log(this.userInfo)
+            this.SET_USER_INFO(this.userInfo)
+            this.$router.push('/profile')
+          } else{
+            Toast('验证码不正确')
+          }
+        } else {
+          this.errorInfo = '';
+          
+        }
+
       },
       onDelete() {
         this.value = this.value.slice(0, this.value.length - 1);
-      },
+      }, 
     },
+    computed: {
+      ...mapGetters([
+        'userPhone',
+    ])
+  }
   }
 </script>
 

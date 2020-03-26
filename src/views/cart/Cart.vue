@@ -63,7 +63,7 @@
 import { ActionSheet } from 'vant';
 import { Toast , Dialog} from 'vant';
 import { mapState, mapMutations } from 'vuex'
-import noLogin from './../login/SelectLogin'
+import noLogin from './../login/SelectLoginCart'
   export default {
     name:'Cart',
     data() {
@@ -189,7 +189,7 @@ import noLogin from './../login/SelectLogin'
 <style lang="scss" scoped>
   #cart{
     width: 100%;
-    height: 100%;
+    height: calc(100vh);
     // background-color: #f5f5f5;
   }
   .header{
