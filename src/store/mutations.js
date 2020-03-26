@@ -7,6 +7,7 @@ import {
   CLEAR_SHOP_CART,
   SET_USER_PHONE,
   SET_USER_INFO,
+  INIT_USER_INFO,
 } from './mutations-type';
 import {getStore, setStore, removeStore} from '../config/global'
 import Vue from 'vue'
@@ -110,5 +111,14 @@ export default {
   //存入用户信息
   [SET_USER_INFO](state,getUserInfo){
     state.userInfo = getUserInfo
+    setStore('userInfo',state.userInfo)
+  },
+
+  //获取用户信息
+  [INIT_USER_INFO](state){
+    let initUserInfo = getStore('userInfo')
+    if (initUserInfo) {
+      state.userInfo = JSON.parse(initUserInfo)
+    }
   }
 }

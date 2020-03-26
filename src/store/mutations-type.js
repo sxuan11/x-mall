@@ -6,3 +6,4 @@ export const SELECT_ALL_GOODS ='SELECT_ALL_GOODS';//全选
 export const CLEAR_SHOP_CART ='CLEAR_SHOP_CART';//清空购物车
 export const SET_USER_PHONE ='SET_USER_PHONE';//获取手机号
 export const SET_USER_INFO ='SET_USER_INFO';//存入用户信息
+export const INIT_USER_INFO ='INIT_USER_INFO';//初始化用户数据
