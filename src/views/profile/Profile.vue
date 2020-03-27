@@ -7,7 +7,7 @@
       :border="false"
     />
     <van-cell-group style="margin-top:0.85rem;">
-    <van-cell style="background-color: rgb(255, 133, 42);">
+    <van-cell style="background-color: rgb(255, 133, 42);" @click="toUserCenter">
       <!-- 使用 title 插槽来自定义标题 -->
       <template slot="title">
         <div>
@@ -69,7 +69,9 @@
         />
     </van-cell>
     </div>
+
     <div v-else><noLogin/></div>
+
   </div>
 </template>
 
@@ -88,6 +90,11 @@
     },
     computed:{
       ...mapState(["userInfo"])
+    },
+    methods:{
+      toUserCenter(){
+        this.$router.push('/usercenter')
+      }
     }
   }
 </script>
@@ -120,7 +127,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
 }
 .personName{
   font-size: 0.5rem;

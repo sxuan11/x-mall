@@ -46,7 +46,7 @@ import {mapState , mapMutations} from 'vuex'
       }
     },
     methods:{
-      ...mapMutations(["INIT_SHOP_CART"])
+      ...mapMutations(["INIT_SHOP_CART","INIT_USER_INFO"])
     },
     computed:{
       ...mapState(["shopCart"]),
@@ -71,6 +71,7 @@ import {mapState , mapMutations} from 'vuex'
     mounted(){
       //获取当前购物车的数据
       this.INIT_SHOP_CART()
+      this.INIT_USER_INFO()
     }
   }
 </script>

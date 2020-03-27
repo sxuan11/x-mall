@@ -8,6 +8,7 @@ import {
   SET_USER_PHONE,
   SET_USER_INFO,
   INIT_USER_INFO,
+  USER_LOGOUT,
 } from './mutations-type';
 import {getStore, setStore, removeStore} from '../config/global'
 import Vue from 'vue'
@@ -120,5 +121,11 @@ export default {
     if (initUserInfo) {
       state.userInfo = JSON.parse(initUserInfo)
     }
+  },
+
+  //退出登录
+  [USER_LOGOUT](state){
+    state.userInfo = {}
+    removeStore('userInfo')
   }
 }

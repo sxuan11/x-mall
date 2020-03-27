@@ -38,7 +38,10 @@ const routes = [
   {
     path: '/profile',
     name: 'profile',
-    component: () => import(/* webpackChunkName: "profile" */ './../views/profile/Profile.vue')
+    component: () => import(/* webpackChunkName: "profile" */ './../views/profile/Profile.vue'),
+    children:[
+
+    ],
   },
   {
     path: '/cart',
@@ -103,6 +106,11 @@ const routes = [
     name: 'inputcode',
     component: () => import(/* webpackChunkName: "login" */ './../views/login/InputCode.vue')
   },
+  {
+    path: '/usercenter',
+    name: 'usercenter',
+    component: () => import(/* webpackChunkName: "usercenter" */ './../views/profile/children/userCenter.vue'),
+  }
   
 
   // {path: '/', redirect: '/dashboard'},

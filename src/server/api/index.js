@@ -19,6 +19,10 @@ const API_BASE_URL = '/sxsx'
 export const getPhoneCode = (phone) => ajax(API_BASE_URL + '/api/send_code',{phone})
 //手机验证码登录
 export const phoneCodeLogin = (phone,code) => ajax(API_BASE_URL + '/api/login_code',{phone,code},'POST')
+//退出登录
+export const userLogOut = () => ajax(API_BASE_URL + '/api/logout')
+//
+// export const userLogOut = (phone,code) => ajax(API_BASE_URL + '/api/logout',{phone,code},'POST')
 
 //地址接口
 //获取用户当前的地址
