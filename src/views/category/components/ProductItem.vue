@@ -90,6 +90,9 @@
             //     }
 
             // }
+        },
+        beforeDestroy(){
+            PubSub.unsubscribe('cateAddToCart')
         }
     }
 </script>

@@ -47,6 +47,9 @@
       addToCart(item){
         PubSub.publish("homeAddToCart",item)
       }
+    },
+    beforeDestroy(){
+      PubSub.unsubscribe('homeAddToCart')
     }
   }
 </script>

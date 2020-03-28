@@ -24,7 +24,7 @@ export const ShowBack = (callback) =>{
   //判断是否达到顶点
 
   const showBackFun = () =>{
-    console.log(docB.scrollTop);
+    // console.log(docB.scrollTop);
     if(docB.scrollTop>=200){
       callback(true);
     }else{

@@ -39,14 +39,14 @@
     // 引入滚动组件
     import BScroll from 'better-scroll'
     // 引入接口
-    import {getCategory, getCategoriesDetail} from './../../server/api/index'
+    import { getCategory , getCategoriesDetail , addToCart } from './../../server/api/index'
 
     // 引入通知插件
     import PubSub from 'pubsub-js';
     import { Toast } from 'vant';
 
 	// 引入vuex
-	import {mapState,mapMutations} from 'vuex'
+	import { mapState , mapMutations } from 'vuex'
 
     export default {
         name: "Category",
@@ -65,32 +65,47 @@
         created() {
             this.initData();
         },
+        computed:{
+            ...mapState(['userInfo'])
+        },
         mounted(){
-					PubSub.subscribe("cateAddToCart",(msg,goods)=>{
-						if (msg == "cateAddToCart") {
-							this.ADD_GOODS({
-								itemId:goods.id,
-								goodsName:goods.name,
-								smallImage:goods.small_image,
-								salePrice:goods.price,
-							})
-							//发送提示给用户
-							Toast({
-								message:"添加购物车成功",
-								type:"success",
-								duration:1000
-								});
-						} else {
-							
-						}
-					})
+			PubSub.subscribe("cateAddToCart",(msg,goods)=>{
+                if (msg === "cateAddToCart") {
+                    console.log(this.userInfo)
+                    if( this.userInfo.token){  
+                        this.addRealCart(goods)   
+                    }else {
+                        Toast('尚未登录')
+                        this.$router.push('/login')
+                    }
+                }
+                })
         },
         components: {
             Header,
             ContentView
         },
         methods: {
-					...mapMutations(['ADD_GOODS']),
+            ...mapMutations(['ADD_GOODS']),
+            async addRealCart(goods){
+                let result = await addToCart(this.userInfo.token,goods.id,goods.name,goods.price,goods.small_image)
+                if(result.success_code === 200){
+                    this.ADD_GOODS({
+						itemId:goods.id,
+						goodsName:goods.name,
+						smallImage:goods.small_image,
+						salePrice:goods.price,
+					})
+					//发送提示给用户
+					Toast({
+						message:"添加购物车成功",
+						type:"success",
+						duration:1000
+					});
+                }else{
+                    Toast.fail('其他错误，请尝试重新登录')
+                }
+            },
             // 1. 初始化操作(数据和界面)
             async initData() {
                 // 1. 获取左边的数据
@@ -141,6 +156,9 @@
                 }
             }
         },
+        beforeDestroy(){
+            PubSub.unsubscribe('cateAddToCart')
+        }
     }
 </script>
 

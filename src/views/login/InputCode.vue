@@ -25,7 +25,7 @@
 
 <script>
   import { phoneCodeLogin } from './../../server/api/index'
-  import { mapGetters , mapMutations} from 'vuex'
+  import { mapGetters , mapMutations , mapActions} from 'vuex'
   import { Toast } from 'vant'
   export default {
     data() {
@@ -37,6 +37,7 @@
     },
     methods: {
       ...mapMutations(['SET_USER_INFO']),
+      ...mapActions(['syncUserInfo']),
       onClickLeft(){
         this.$router.back();
       },
@@ -48,7 +49,7 @@
           if (result.success_code === 200){
             this.userInfo = result.data
             console.log(this.userInfo)
-            this.SET_USER_INFO(this.userInfo)
+            this.syncUserInfo(result.data)
             this.$router.push('/profile')
           } else{
             Toast('验证码不正确')

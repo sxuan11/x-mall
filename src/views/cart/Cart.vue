@@ -60,10 +60,11 @@
 </template>
 
 <script>
-import { ActionSheet } from 'vant';
-import { Toast , Dialog} from 'vant';
-import { mapState, mapMutations } from 'vuex'
-import noLogin from './../login/SelectLoginCart'
+  import { ActionSheet } from 'vant';
+  import { Toast , Dialog} from 'vant';
+  import { mapState, mapMutations } from 'vuex'
+  import noLogin from './../login/SelectLoginCart'
+  import { editShopNum , getShopCart } from './../../server/api/index'
   export default {
     name:'Cart',
     data() {
@@ -112,14 +113,16 @@ import noLogin from './../login/SelectLoginCart'
     },
     methods:{
       ...mapMutations(['DELETE_SHOP_ATCART','ADD_GOODS','SELECT_SINGLE_GOODS','SELECT_ALL_GOODS','CLEAR_SHOP_CART']),
-
+      //显示清空购物车的模块
       showSheet(){
         this.show = !this.show;
         
       },
+      //提交订单
       onSubmit(){
         this.$router.push({path:'/order'})
       },
+      //选择商品
       onSelect(item){
         this.show = false;
         if(item.index === 0){
@@ -138,6 +141,7 @@ import noLogin from './../login/SelectLoginCart'
           
         }
       },
+      //
       onCancel() {
         this.show = !this.show;
         // Toast('cancel');
@@ -162,9 +166,10 @@ import noLogin from './../login/SelectLoginCart'
         }
       },
       //增加商品
-      itemPlus(itemId,itemName, smallImage, itemPrice){
+      async itemPlus(itemId,itemName, smallImage, itemPrice){
         // this.num = Number(this.num);
         // this.num +=1 
+        let result = await editShopNum()
         this.ADD_GOODS({
           itemId,
           itemName,

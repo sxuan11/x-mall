@@ -17,7 +17,8 @@
 
 <script>
   import { mapState, mapMutations } from 'vuex'
-  import { Cell , CellGroup , Toast } from 'vant';
+  import { Cell , CellGroup , Toast, Form } from 'vant';
+  import { userLogOut }  from './../../../server/api/index.js'
   export default {
     data() {
       return {
@@ -29,10 +30,15 @@
       onClickLeft() {
         this.$router.back()
       },
-      logOut(){
-        this.USER_LOGOUT();
-        Toast('退出登录成功')
-        this.$router.push('/home')
+      async logOut(){    
+        let result = await userLogOut();
+        if(result.success_code === 200){
+          this.USER_LOGOUT();
+          Toast(result)
+          this.$router.push('/home')
+        }else {
+          Toast('其他错误')
+        }
       }
     },
     computed:{
