@@ -32,8 +32,8 @@
 <script>
   import { Notify , Toast } from 'vant';
   import {mapState , mapMutations , mapActions } from 'vuex'
-  import { autoUploadUserInfo , getShopCart}  from './../../server/api/index.js'
-
+  import { getUserInfo , getShopCart}  from './../../server/api/index.js'
+  import {setStore} from './../../config/global'
   export default {
     data() {
       return {
@@ -51,43 +51,45 @@
       ...mapMutations(["INIT_SHOP_CART","INIT_USER_INFO"]),
       ...mapActions(['reqUserInfo']),
       async initShopCart(){
-        console.log(this.userInfo)
-        // if(this.userInfo.token){
+        // console.log(this.userInfo)
+        if(this.userInfo.token){
           let result = await getShopCart(this.userInfo.token)
-          console.log(result)
+          // console.log(result)
           if(result.success_code === 200){
-            let cartArr = result.data;
+            let cartServer = result.data
             let shopCart = {};
-            cartArr.forEach((value)=>{
-                shopCart[value.goods_id] = {
-                    "num": value.num,
-                    "id": value.goods_id,
-                    "name": value.goods_name,
-                    "small_image": value.small_image,
-                    "price": value.goods_price,
-                    "checked": value.checked
-                }
-            });
+            cartServer.forEach((value)=>{
+              shopCart[value.goods_id]={
+                "num": value.num,
+                "id": value.goods_id,
+                "name": value.goods_name,
+                "smallimage": value.small_image,
+                "salePrice": value.goods_price,
+                "checked": value.checked
+              }
+            })
             setStore('shopCart', shopCart);
             this.INIT_SHOP_CART()
+          }else{
+            Toast.fail('未知错误，请尝试重新登录') 
           }
-
-        // }else{
-        //   Toast.fail('未知错误，请尝试重新登录')
-        // }
+        }else{
+          Toast.fail('尚未登录，重新登录')
+        }
       }
     },
     computed:{
       ...mapState(["shopCart","userInfo"]),
       
-      async autoLogin(){
-        let result  = await autoUploadUserInfo()
-        if(result.success_code === 200 ){
-          this.INIT_USER_INFO()
-        }else{
-          // Toast.fail('请先登录')
-        }
-      },
+      // async autoLogin(){
+      //   let result  = await getUserInfo()
+      //   // console.log(result)
+      //   if(result.success_code === 200 ){
+      //     this.INIT_USER_INFO()
+      //   }else{
+      //     Toast.fail('请先登录')
+      //   }
+      // },
       goodsNum(){
         // console.log(123)
         if(this.shopCart){
@@ -108,11 +110,13 @@
       // this.initShopCart()
     },
     mounted(){
-      //获取当前购物车的数据
-      this.initShopCart()
       //获取用户数据,判断是否可以自动登录
-      this.autoLogin
       this.reqUserInfo()
+      //自动登录
+      // this.autoLogin
+      //获取当前购物车的数据，并初始化购物车
+      this.initShopCart()
+
     },
 
   }

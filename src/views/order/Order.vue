@@ -5,14 +5,14 @@
     <van-nav-bar
       title="确认订单"
       left-text="返回"
-      right-text="登录"
+      :right-text="userInfo.real_name"
       left-arrow
       :fixed=true
       :border=true
       @click-left="onClickLeft"
       @click-right="onClickRight"
     />
-
+    <!-- 收货地址 -->
     <van-contact-card
       :type="address_type"
       :name="address_name"
@@ -42,6 +42,7 @@
       /> -->
     <!-- </van-popup> -->
 
+
     <van-cell-group>
     <!-- 送达时间选择 -->
     <van-cell title="送达时间" is-link  @click="showPopupTime" class="arriveTime">
@@ -67,14 +68,15 @@
     </van-popup>
 
     <!-- 商品列表 -->
-    <van-cell is-link arrow-direction="down" @click="showPopupShop" class="shopList">
-      <div class="shopListDetail">
-        <div class="shopListDetail-1">
-          <img class="shopListDetailImg" src="https://img.yzcdn.cn/vant/ipad.jpeg"> 
-          <img class="shopListDetailImg" src="https://img.yzcdn.cn/vant/ipad.jpeg">
+    <van-cell is-link title='商品' @click="showPopupShop"   :value="'共'+this.shoplist.length+'件'"  arrow-direction="down">
+      <!-- <img :src="this.shoplist[0].small_image" alt="" class="shopListDetailImg">
+      <img :src="this.shoplist[1].small_image" alt="" class="shopListDetailImg">
+      <img :src="this.shoplist[2].small_image" alt="" class="shopListDetailImg"> -->
+      <!-- <div class="shopListDetail">
+        <div class="shopListDetail-1" v-for="(item , index) in shoplist " :key="index">
+          <img class="shopListDetailImg" :src="item.small_image"> 
         </div>
-        <div class="shopListDetail-2">共{{}}件</div>
-      </div>
+      </div> -->
     </van-cell>
     <van-popup 
         position="bottom"
@@ -82,13 +84,20 @@
         v-model="shopShow"
     >
      <van-card
-        num="2"
-        price="2.00"
-        desc="描述信息"
-        title="商品标题"
-        thumb="https://img.yzcdn.cn/vant/ipad.jpeg"
+        v-for="(item , index) in shoplist " :key="index"
+        :num="item.num "
+        :price="item.goods_price | NOmoneyFormat"     
+        :title="item.goods_name"
+        :thumb="item.small_image"
       />
     </van-popup>
+    <van-cell >
+    <div class="shopListDetail">
+        <div class="shopListDetail-1" v-for="(item , index) in shoplist " :key="index">
+          <img class="shopListDetailImg" :src="item.small_image"> 
+        </div>
+      </div>  
+    </van-cell>
     </van-cell-group>
 
     <van-cell-group>
@@ -119,10 +128,10 @@
       <van-radio-group v-model="paySelect" @change="selectPay(radio)">
         <van-cell-group>
           <van-cell title="微信" clickable @click="radio = 1">
-            <van-radio slot="right-icon" name=1 />
+            <van-radio slot="right-icon" name=1 @click="closeCell" />
           </van-cell>
           <van-cell title="支付宝" clickable @click="radio = 2">
-            <van-radio slot="right-icon" name=2 />
+            <van-radio slot="right-icon" name=2 @click="closeCell" />
           </van-cell>
         </van-cell-group>
       </van-radio-group>
@@ -145,9 +154,9 @@
     <!-- 商品詳情 -->
     <van-cell-group>
     <!-- 支付方式 -->
-    <van-cell title="商品金额">
+    <van-cell title="商品金额" :value="totalPrice | moneyFormat">
     </van-cell>
-    <van-cell title="配送费">
+    <van-cell title="配送费" :value="disPrice | moneyFormat">
     </van-cell>
     </van-cell-group>
 
@@ -176,7 +185,7 @@
     
     <!-- 订单提交 -->
     <van-submit-bar
-      :price="3050"
+      :price="totalPrice*100 + disPrice*100"
       button-text="去支付"
       @submit="onSubmit"
       :loading="loading"
@@ -201,6 +210,8 @@
   
   import PubSub from 'pubsub-js';
   import { Toast , Popup } from 'vant';
+  import { selectShopNow }  from './../../server/api/index'
+  import { mapState } from 'vuex'
 
   export default {
     data() {
@@ -233,7 +244,9 @@
         message:'',
         chosenCoupon: -1,
         coupons: [coupon],
-        disabledCoupons: [coupon]
+        disabledCoupons: [coupon],
+        shoplist:[],
+        totalPrice:null,
       }
     },
     methods: {
@@ -272,6 +285,11 @@
         this.isEdit = true;      
         this.showEdit = true;
         this.editingContact = item;
+      },
+
+      //选中自动回调
+      closeCell(){
+        this.showPay = !this.showPay
       },
 
       // 选中联系人
@@ -335,19 +353,59 @@
       cancel(){
         this.timeShow= false
         this.currentDate= 0
+      },
+      //查询提交订单的商品
+      async nowCommit(){
+        let result = await selectShopNow(this.userInfo.token)
+        if(result.success_code === 200){
+          this.shoplist = result.data
+        }
+      },
+      //计算商品总价
+      counterShopPrice(){
+        Object.values(this.shopCart).forEach((goods, index)=>{
+          if(goods.checked){
+            this.totalPrice += goods.salePrice * goods.num;    
+          }
+        });
+        this.totalPrice = this.totalPrice.toFixed(2)
       }
     },
     computed: {
+      ...mapState(['userInfo','shopCart']),
+      //地址编辑类型
       cardType() {
         return this.chosenContactId !== null ? 'edit' : 'add';
       },
-
+      //选中地址id
       currentContact() {
         const id = this.chosenContactId;
         return id !== null ? this.list.filter(item => item.id === id)[0] : {};
+      },
+      // countTotalPrice(){
+      //     let totalPrice = 0;
+      //     console.log(this.shoplist)
+      //     console.log(this.shopCart)
+      //     Object.values(this.shopCart).forEach((goods, index)=>{
+      //         if(goods.checked){
+      //             this.totalPrice += goods.salePrice * goods.num;
+      //         }
+      //     });
+      //     // return totalPrice.toFixed(2);
+      // },
+      disPrice(){
+        // 商品总价 > 50 免配送费  <50 6元
+        if(this.totalPrice > 50){
+            return 0;
+        }else {
+            return 6;
+        }
       }
     },
     mounted(){
+      //查看当前选中的商品    
+      this.nowCommit();
+
       PubSub.subscribe('AddressSelect',(msg,item)=>{
         if(msg='AddressSelect'){
           this.address_type = 'edit';
@@ -355,7 +413,11 @@
           this.address_phone = item.tel;
           this.address_id = item.id;
         }
-      })
+      });
+      this.counterShopPrice()
+    },
+    updated(){
+
     }
   }
 </script>
@@ -373,11 +435,14 @@
   width: 100%;
   height: 1.5rem;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-x: scroll;
 }
 .shopListDetailImg{
   width: 1.5rem;
   height: 1.5rem;
+  flex-wrap: nowrap;
 }
 .paySelect{
   font-size: 0.5rem;

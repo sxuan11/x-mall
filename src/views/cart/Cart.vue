@@ -47,11 +47,13 @@
         @submit="onSubmit"
         class="van-submit-bar"
         :change="counteAllPrice"
+        tip-icon="info-o"
       >
         <van-checkbox v-model="checked" @click="allGoodsSelet(isSelectedAll)" :change="isSelectedAll" >全选</van-checkbox>
-        <!-- <span slot="tip">
-          你的收货地址不支持同城送, <span></span>
-        </span> -->
+        <span slot="tip">
+
+          商品的总价大于50可以免运费<span></span>
+        </span>
       </van-submit-bar>
       </div>
     </div>
@@ -64,12 +66,11 @@
   import { Toast , Dialog} from 'vant';
   import { mapState, mapMutations } from 'vuex'
   import noLogin from './../login/SelectLoginCart'
-  import { editShopNum , getShopCart } from './../../server/api/index'
+  import { editShopNum , clearShopCart , singleSelectShop , allSelectShop } from './../../server/api/index'
   export default {
     name:'Cart',
     data() {
       return {
-        checked:true,
         // num:1,
         show: false,
         actions: [
@@ -122,19 +123,24 @@
       onSubmit(){
         this.$router.push({path:'/order'})
       },
-      //选择商品
+      //清空购物车
       onSelect(item){
         this.show = false;
         if(item.index === 0){
-
           Dialog.confirm({
             title: '真的要清空购物车吗',
             message: '',
-          }).then(() => {
+          }).then(async () => {
             // on confirm
             // console.log('dele')
-            this.CLEAR_SHOP_CART()
-            Toast("清空购物车成功");
+            let result = await clearShopCart(this.userInfo.token)
+            if(result.success_code === 200){
+              this.CLEAR_SHOP_CART()
+              Toast("清空购物车成功");
+            }else{
+              Toast.fail('未知错误，请尝试重新登录')
+            }
+
           }).catch(() => {
             // on cancel
           });
@@ -148,18 +154,31 @@
       },
       
       //删除商品
-      itemDelete(itemId,itemNum){
+      async itemDelete(itemId,itemNum){
         if(itemNum>1){
-          this.DELETE_SHOP_ATCART({itemId})
-          Toast.fail('减少了一件了');
+          let result = await editShopNum(this.userInfo.token ,itemId, 'reduce')
+          if(result.success_code === 200){
+            console.log(result)
+            this.DELETE_SHOP_ATCART({itemId})
+            Toast('减少了一件了');
+          }else{
+            Toast.fail('未知错误，请尝试重新登录')
+          }
         }else if(itemNum === 1){
           Dialog.confirm({
             title: '真的要删除这件商品吗',
             message: '',
-          }).then(() => {
+          }).then(async () => {
             // on confirm
             // console.log('dele')
-            this.DELETE_SHOP_ATCART({itemId})
+            let result = await editShopNum(this.userInfo.token ,itemId, 'reduce')
+            if(result.success_code === 200){
+              console.log(result)
+              this.DELETE_SHOP_ATCART({itemId})
+              Toast('减少了一件了');
+            }else{
+              Toast.fail('未知错误，请尝试重新登录')
+            }
           }).catch(() => {
             // on cancel
           });
@@ -169,23 +188,35 @@
       async itemPlus(itemId,itemName, smallImage, itemPrice){
         // this.num = Number(this.num);
         // this.num +=1 
-        let result = await editShopNum()
-        this.ADD_GOODS({
-          itemId,
-          itemName,
-          smallImage,
-          itemPrice,
-        })
+        let result = await editShopNum(this.userInfo.token,itemId,'add')
+        if(result.success_code === 200){
+          this.ADD_GOODS({
+            itemId,
+            itemName,
+            smallImage,
+            itemPrice,
+          })
+        }else{
+          Toast.fail('未知错误，请尝试重新登录')
+        }
       },
 
       //单个商品的选择和取消
-      singleGoodsSelect(itemId){
-        this.SELECT_SINGLE_GOODS({itemId})
+      async singleGoodsSelect(itemId){
+        let result = await singleSelectShop(this.userInfo.token,itemId)
+        if(result.success_code === 200){
+          this.SELECT_SINGLE_GOODS({itemId})
+        }
+
       },
 
       //全部商品的选中
-      allGoodsSelet(isSelected){
-        this.SELECT_ALL_GOODS({isSelected})
+      async allGoodsSelet(isSelected){
+
+        let result = await allSelectShop(this.userInfo.token,isSelected)
+        if(result.success_code === 200){
+          this.SELECT_ALL_GOODS({isSelected})
+        }
       }
     },
   }

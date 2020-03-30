@@ -9,6 +9,11 @@ Vue.filter('moneyFormat',(value)=>{
     return '￥' + Number(value).toFixed(2)
 })
 
+//人民币过滤器
+Vue.filter('NOmoneyFormat',(value)=>{
+    return Number(value).toFixed(2)
+})
+
 //时间过滤器
 Vue.filter('dateformat', (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') =>{
     return moment(dataStr).format(pattern)

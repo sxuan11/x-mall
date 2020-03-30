@@ -28,7 +28,7 @@ export const phoneCodeLogin = (phone,code) => ajax(API_BASE_URL + '/api/login_co
 //退出登录
 export const userLogOut = () => ajax(API_BASE_URL + '/api/logout')
 //自动登录
-export const autoUploadUserInfo = () => ajax(API_BASE_URL + '/api/userinfo')
+export const getUserInfo = () => ajax(API_BASE_URL + '/api/userinfo')
 
 
 /**
@@ -48,9 +48,9 @@ export const singleSelectShop = (user_id,goods_id) => ajax(API_BASE_URL + '/api/
 //全部商品的选中和反选
 export const allSelectShop = (user_id,flag) => ajax(API_BASE_URL + '/api/cart/all_select',{user_id,flag},'POST')
 //查询当前选中的商品
-export const selectShopNow = () => ajax(API_BASE_URL + '/api/cart/selected')
+export const selectShopNow = (user_id) => ajax(API_BASE_URL + '/api/cart/selected/'+user_id)
 //删除当前选中的商品
-export const deleteSelectShop = () => ajax(API_BASE_URL + '/api/cart/del_checked')
+export const deleteSelectShop = (user_id) => ajax(API_BASE_URL + '/api/cart/del_checked/'+user_id)
 
  /**
   * 地址相关

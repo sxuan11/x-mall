@@ -71,11 +71,14 @@ export default {
   [SELECT_SINGLE_GOODS](state,{itemId}){
     let shopCart  = state.shopCart;
     let goods = shopCart[itemId];
+    // console.log(goods.checked)
     if (goods) {
       if (goods.checked) {//判断是否有该属性
-        goods.checked = !goods.checked;
-      }else{
-        Vue.set(goods,"checked",true)
+        goods.checked
+        // console.log(goods.checked)
+      }
+      else{
+        Vue.set(goods,"checked",false)
       }
       //同步数据
       state.shopCart = {...shopCart};
@@ -110,8 +113,8 @@ export default {
   },
 
   //存入用户信息
-  [SET_USER_INFO](state,getUserInfo){
-    state.userInfo = getUserInfo
+  [SET_USER_INFO](state,{userInfo}){
+    state.userInfo = userInfo
     setStore('userInfo',state.userInfo)
   },
 
