@@ -51,7 +51,6 @@
       >
         <van-checkbox v-model="checked" @click="allGoodsSelet(isSelectedAll)" :change="isSelectedAll" >全选</van-checkbox>
         <span slot="tip">
-
           商品的总价大于50可以免运费<span></span>
         </span>
       </van-submit-bar>

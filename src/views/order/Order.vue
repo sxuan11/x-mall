@@ -31,7 +31,7 @@
         @edit="onEdit"
         @select="onSelect"
       />
-    </van-popup>
+    </van-popup> -->
     <!-- 联系人编辑 -->
     <!--<van-popup v-model="showEdit" position="bottom">
       <van-contact-edit
@@ -258,7 +258,7 @@
         this.$router.push({path:'/cart'})
       },
       onClickRight() {
-        Toast('登录');
+        Toast(this.userInfo.real_name);
       },
       onChange(index) {
       this.showListCoupon = false;
@@ -368,6 +368,7 @@
             this.totalPrice += goods.salePrice * goods.num;    
           }
         });
+        // console.log(this.totalPrice,this.shopCart)
         this.totalPrice = this.totalPrice.toFixed(2)
       }
     },
@@ -416,7 +417,7 @@
       });
       this.counterShopPrice()
     },
-    updated(){
+    beforeUpdate(){
 
     }
   }
